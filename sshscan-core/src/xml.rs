@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use xmltree::{Element, XMLNode};
 use crate::SshScanErr;
 
@@ -13,6 +15,18 @@ pub enum HostStatus {
     Up,
     Down,
     Unknown,
+}
+
+impl FromStr for HostStatus {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s.to_ascii_lowercase().as_str() {
+            "up" => Self::Up,
+            "down" => Self::Down,
+            _ => Self::Unknown
+        })
+    }
 }
 
 impl Default for HostStatus {
@@ -74,12 +88,7 @@ fn process_host(host_elem: &Element) -> Result<Host, SshScanErr> {
             match child.name.as_str() {
                 "status" => {
                     if let Some(addr) = child.attributes.get("state") {
-                        match addr.as_str() {
-                            // We are the bastion of efficiency
-                            "up" => {host_status = HostStatus::Up},
-                            "down" => {host_status = HostStatus::Down}
-                            _ => { /* Keep as unknown */}
-                        }
+                        host_status = addr.parse().expect("this impl doesn't fail");
                     }
                 }
                 "address" => {
@@ -108,12 +117,12 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
     let mut port = 0u16;
     let mut algos = Default::default();
     if let Some(port_elem) = port_elem.as_element() {
-        port = port_elem.attributes.get("portid").ok_or(SshScanErr::XMLInvalid)?.parse()?;
+        port = port_elem.attributes.get("portid").unwrap_or(&"0".to_owned()).parse().unwrap_or_default();
         for child in port_elem.children.iter() {
             if let Some(child) = child.as_element() {
                 match child.name.as_str() {
                     "state" => {
-                        state = child.attributes.get("state").ok_or(SshScanErr::XMLInvalid)?.as_str() == "open";
+                        state = child.attributes.get("state").unwrap_or(&"".to_owned()) == "open";
                     },
                     "script" => {
                         process_script(child, &mut algos)?;
