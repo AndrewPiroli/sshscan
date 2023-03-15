@@ -1,0 +1,8 @@
+[package]
+name = "sshscan-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+xmltree = { version = "=0.10.3", default-features = false }
+thiserror = { version = "1.0.39", default-features = false }

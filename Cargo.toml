@@ -1,0 +1,8 @@
+[workspace]
+members = ["sshscan-core", "sshscan-bin"]
+
+[profile.release]
+lto = true
+
+[profile.dev.build-override]
+opt-level = 3

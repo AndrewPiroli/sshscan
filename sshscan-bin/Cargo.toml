@@ -1,0 +1,7 @@
+[package]
+name = "sshscan-bin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sshscan-core = { path = "../sshscan-core" }
