@@ -1,4 +1,5 @@
 pub mod xml;
+pub mod agg_data;
 
 use std::num::ParseIntError;
 use std::str::FromStr;
