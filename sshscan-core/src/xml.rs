@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
-use xmltree::{Element, XMLNode};
 use crate::SshScanErr;
+use xmltree::{Element, XMLNode};
 
 #[derive(Debug, Default, Clone)]
 pub struct Host {
@@ -24,7 +24,7 @@ impl FromStr for HostStatus {
         Ok(match s.to_ascii_lowercase().as_str() {
             "up" => Self::Up,
             "down" => Self::Down,
-            _ => Self::Unknown
+            _ => Self::Unknown,
         })
     }
 }
@@ -39,7 +39,7 @@ impl Default for HostStatus {
 pub struct Description {
     pub portid: u16,
     pub state: bool,
-    pub algos: Algos
+    pub algos: Algos,
 }
 
 #[derive(Debug, Default, Clone)]
@@ -54,16 +54,17 @@ pub struct Algos {
 impl Algos {
     fn vec_from_xml_key(&mut self, key: &str) -> &mut Vec<String> {
         match key {
-            "kex_algorithms" => { &mut self.kex_algos },
-            "server_host_key_algorithms" => { &mut self.host_key_algos },
-            "encryption_algorithms" => { &mut self.encryption_algos },
-            "mac_algorithms" => { &mut self.mac_algos },
-            "compression_algorithms" => { &mut self.compression_algos },
-            _ => {panic!("fixme")},
+            "kex_algorithms" => &mut self.kex_algos,
+            "server_host_key_algorithms" => &mut self.host_key_algos,
+            "encryption_algorithms" => &mut self.encryption_algos,
+            "mac_algorithms" => &mut self.mac_algos,
+            "compression_algorithms" => &mut self.compression_algos,
+            _ => {
+                panic!("fixme")
+            }
         }
     }
 }
-
 
 pub fn process_xml(xml: &mut str) -> Result<Vec<Result<Host, SshScanErr>>, SshScanErr> {
     let mut res = Vec::new();
@@ -95,13 +96,15 @@ fn process_host(host_elem: &Element) -> Result<Host, SshScanErr> {
                     if let Some(addr) = child.attributes.get("addr") {
                         host_addr.clone_from(addr);
                     }
-                },
+                }
                 "ports" => {
                     for port_elem in child.children.iter() {
                         descrs.push(process_host_port(port_elem)?);
                     }
                 }
-                _ => { continue; }
+                _ => {
+                    continue;
+                }
             }
         }
     }
@@ -117,30 +120,50 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
     let mut port = 0u16;
     let mut algos = Default::default();
     if let Some(port_elem) = port_elem.as_element() {
-        port = port_elem.attributes.get("portid").unwrap_or(&"0".to_owned()).parse().unwrap_or_default();
+        port = port_elem
+            .attributes
+            .get("portid")
+            .unwrap_or(&"0".to_owned())
+            .parse()
+            .unwrap_or_default();
         for child in port_elem.children.iter() {
             if let Some(child) = child.as_element() {
                 match child.name.as_str() {
                     "state" => {
                         state = child.attributes.get("state").unwrap_or(&"".to_owned()) == "open";
-                    },
+                    }
                     "script" => {
                         process_script(child, &mut algos)?;
-                    },
-                    _ => {},
+                    }
+                    _ => {}
                 }
             }
         }
     }
-    Ok(Description { portid: port, state, algos })
+    Ok(Description {
+        portid: port,
+        state,
+        algos,
+    })
 }
 
 fn process_script(script_elem: &Element, algos: &mut Algos) -> Result<(), SshScanErr> {
     for table_elem in script_elem.children.iter() {
         let table_elem = table_elem.as_element().ok_or(SshScanErr::XMLInvalid)?;
-        let key = table_elem.attributes.get("key").ok_or(SshScanErr::XMLInvalid)?.as_str();
+        let key = table_elem
+            .attributes
+            .get("key")
+            .ok_or(SshScanErr::XMLInvalid)?
+            .as_str();
         for row in table_elem.children.iter() {
-            let row = row.as_element().ok_or(SshScanErr::XMLInvalid)?.children.get(0).ok_or(SshScanErr::XMLInvalid)?.as_text().ok_or(SshScanErr::XMLInvalid)?;
+            let row = row
+                .as_element()
+                .ok_or(SshScanErr::XMLInvalid)?
+                .children
+                .get(0)
+                .ok_or(SshScanErr::XMLInvalid)?
+                .as_text()
+                .ok_or(SshScanErr::XMLInvalid)?;
             algos.vec_from_xml_key(key).push(row.to_owned());
         }
     }

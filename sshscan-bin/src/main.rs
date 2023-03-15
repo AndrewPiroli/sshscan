@@ -1,5 +1,5 @@
-use std::io::Read;
 use sshscan_core::xml;
+use std::io::Read;
 
 pub fn main() {
     let mut a = std::env::args();

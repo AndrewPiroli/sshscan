@@ -10,5 +10,5 @@ pub enum SshScanErr {
     #[error("Parsing integer failed")]
     ParseIntError(#[from] ParseIntError),
     #[error("Failed to parse XML")]
-    XMLParseFailure(#[from] xmltree::ParseError)
+    XMLParseFailure(#[from] xmltree::ParseError),
 }
