@@ -29,8 +29,12 @@ fn process_host(host_elem: &Element) -> Result<Host, SshScanErr> {
                     }
                 }
                 "address" => {
-                    if let Some(addr) = child.attributes.get("addr") {
-                        host_addr.clone_from(addr);
+                    if let Some(ty) = child.attributes.get("addrtype") {
+                        if ty == "ipv4" || ty == "ipv6" {
+                            if let Some(addr) = child.attributes.get("addr") {
+                                host_addr.clone_from(addr);
+                            }
+                        }
                     }
                 }
                 "ports" => {
