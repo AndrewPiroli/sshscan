@@ -2,10 +2,10 @@ use crate::*;
 use xmltree::{Element, XMLNode};
 
 
-pub fn process_xml(xml: &mut str) -> Result<Vec<Result<Host, SshScanErr>>, SshScanErr> {
+pub fn process_xml<R>(xml: R) -> Result<Vec<Result<Host, SshScanErr>>, SshScanErr>
+where R: std::io::Read {
     let mut res = Vec::new();
-    let c = std::io::Cursor::new(xml);
-    let root = Element::parse(c)?;
+    let root = Element::parse(xml)?;
     for e in root.children.iter() {
         if let Some(elem) = e.as_element() {
             if elem.name == "host" {

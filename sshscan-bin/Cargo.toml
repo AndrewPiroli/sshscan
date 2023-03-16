@@ -6,3 +6,4 @@ license = "BSD-3-Clause"
 
 [dependencies]
 sshscan-core = { path = "../sshscan-core" }
+clap = { version = "=4.0.32", default-features = false, features = ["std", "derive", "help", "usage", "suggestions", "error-context"] }
