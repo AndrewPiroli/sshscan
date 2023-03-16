@@ -2,6 +2,7 @@
 name = "sshscan-core"
 version = "0.1.0"
 edition = "2021"
+license = "BSD-3-Clause"
 
 [dependencies]
 xmltree = { version = "=0.10.3", default-features = false }
