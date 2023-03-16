@@ -13,5 +13,6 @@ pub fn main() {
             proccessed_hosts.push(found);
         }
     }
-    println!("{}", sshscan_core::html::generate(&proccessed_hosts));
+    let agg_data = sshscan_core::agg_data::AggregatedData::build_from_hosts(&proccessed_hosts);
+    println!("{}", sshscan_core::html::generate(&proccessed_hosts, &agg_data));
 }

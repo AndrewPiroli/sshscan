@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use build_html::{self, HtmlPage, Table, HtmlContainer, ContainerType, Container, Html, TableRow};
 
-use crate::{agg_data, Host};
+use crate::{agg_data::{self, AggregatedData}, Host};
 
 const HOST_HEADER: &[&str; 5] = &[
     "Kex Algos",
@@ -50,10 +52,33 @@ pub fn create_host_table(host: &Host) -> Container {
     c
 }
 
-pub fn generate(hosts: &[Host]) -> String {
+pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
     if hosts.len() < 1 { return create_page().to_html_string(); }
     let page = create_page().with_container(
         hosts.iter().map(create_host_table).reduce(|mut acc, c|{acc.add_container(c); acc}).unwrap()
-    );
+    )
+    .with_container(create_algo_list(HOST_HEADER[0], &agg_data.kex_algos))
+    .with_container(create_algo_list(HOST_HEADER[1], &agg_data.host_key_algos))
+    .with_container(create_algo_list(HOST_HEADER[2], &agg_data.encryption_algos))
+    .with_container(create_algo_list(HOST_HEADER[3], &agg_data.mac_algos))
+    .with_container(create_algo_list(HOST_HEADER[4], &agg_data.compression_algos));
     page.to_html_string()
+}
+
+pub fn create_algo_list(title: &str, list: &HashMap<String, Vec<&Host>>) -> Container {
+    let mut c = Container::new(ContainerType::Div)
+    .with_attributes([("class", "sshscan-alist-outer")])
+    .with_html(format!("<h2>{title}</h2>"));
+    for algo in list {
+        let mut inner = Container::new(ContainerType::UnorderedList)
+        .with_attributes([("class", "sshscan-alist-inner")]);
+        for host in algo.1.iter() {
+            for host_port in host.port_states.iter() {
+                let id = format!("{}:{}", host.addr, host_port.portid);
+                inner.add_link(format!("#{id}"), id.as_str());
+            }
+        }
+        c.add_container(Container::new(ContainerType::Div).with_html(format!("<h3>{}</h3>", algo.0)).with_container(inner));
+    }
+    c
 }
