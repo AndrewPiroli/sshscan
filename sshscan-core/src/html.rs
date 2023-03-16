@@ -49,7 +49,16 @@ fn build_host_table(rows: &[Vec<String>]) -> Table {
     .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[3]), HOST_HEADER[3]))
     .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[4]), HOST_HEADER[4])));
     for row in rows {
-        tab.add_body_row(row)
+        let mut r = TableRow::new();
+        for entry in row {
+            if entry.len() > 0 {
+                r.add_cell(TableCell::new(TableCellType::Data).with_link(format!("#algo-{entry}"), entry));
+            }
+            else {
+                r.add_cell(TableCell::new(TableCellType::Data));
+            }
+        }
+        tab.add_custom_body_row(r);
     }
     tab
 }
@@ -95,7 +104,7 @@ pub fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<
                 inner.add_link(format!("#{id}"), id.as_str());
             }
         }
-        c.add_container(Container::new(ContainerType::Div).with_html(format!("<h3>{}</h3>", algo.0)).with_container(inner));
+        c.add_container(Container::new(ContainerType::Div).with_html(format!("<h3 id=algo-{}>{}</h3>", algo.0, algo.0)).with_container(inner));
     }
     c
 }
