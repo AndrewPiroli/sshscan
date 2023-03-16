@@ -13,6 +13,5 @@ pub fn main() {
             proccessed_hosts.push(found);
         }
     }
-    let test_tab = sshscan_core::html::create_host_table(&proccessed_hosts[0]);
-    println!("{}", sshscan_core::html::testing(test_tab));
+    println!("{}", sshscan_core::html::generate(&proccessed_hosts));
 }

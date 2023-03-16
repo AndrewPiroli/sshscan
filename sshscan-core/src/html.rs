@@ -10,17 +10,7 @@ const HOST_HEADER: &[&str; 5] = &[
     "Compression Algos",
 ];
 
-const STYLE: &str = 
-"table, th, td {
-    border: 1px solid black;
-	text-align: center;
-	vertical-align: middle;
-}
-tr.header-row > td {
-    padding-left: 10px;
-	padding-right: 10px;
-}
-";
+const STYLE: &str = include_str!("style.css");
 
 pub fn create_page() -> HtmlPage {
     let time = {
@@ -52,7 +42,7 @@ pub fn create_host_table(host: &Host) -> Container {
     for t in data {
         let id = format!("{}:{}", host.addr, t.0);
         let mut inner = Container::new(ContainerType::Div).with_attributes([("class", "sshscan-htable-inner"), ("id", id.as_str())]);
-        inner.add_html(format!("<h3>{}</h3>", id));
+        inner.add_html(format!("<h3>{id}</h3>"));
         let tab = create_table_generic(HOST_HEADER, &t.1);
         inner.add_table(tab);
         c.add_container(inner);
@@ -60,6 +50,10 @@ pub fn create_host_table(host: &Host) -> Container {
     c
 }
 
-pub fn testing(a: Container) -> String {
-    create_page().with_container(a).to_html_string()
+pub fn generate(hosts: &[Host]) -> String {
+    if hosts.len() < 1 { return create_page().to_html_string(); }
+    let page = create_page().with_container(
+        hosts.iter().map(create_host_table).reduce(|mut acc, c|{acc.add_container(c); acc}).unwrap()
+    );
+    page.to_html_string()
 }
