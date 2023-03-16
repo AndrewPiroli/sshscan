@@ -80,13 +80,13 @@ pub fn wrangle_host_to_table(host: &Host) -> Vec<(u16, Vec<Vec<String>>)> {
             // A X
             // B Y
             // C Z
-            let mut inner2 = Vec::new();
-            inner2.push(port.algos.kex_algos.get(i).unwrap_or(&String::new()).to_string());
-            inner2.push(port.algos.host_key_algos.get(i).unwrap_or(&String::new()).to_string());
-            inner2.push(port.algos.encryption_algos.get(i).unwrap_or(&String::new()).to_string());
-            inner2.push(port.algos.mac_algos.get(i).unwrap_or(&String::new()).to_string());
-            inner2.push(port.algos.compression_algos.get(i).unwrap_or(&String::new()).to_string());
-            inner.push(inner2);
+            inner.push(vec![
+                port.algos.kex_algos.get(i).unwrap_or(&String::new()).to_string(),
+                port.algos.host_key_algos.get(i).unwrap_or(&String::new()).to_string(),
+                port.algos.encryption_algos.get(i).unwrap_or(&String::new()).to_string(),
+                port.algos.mac_algos.get(i).unwrap_or(&String::new()).to_string(),
+                port.algos.compression_algos.get(i).unwrap_or(&String::new()).to_string(),
+            ]);
         }
         res.push((port.portid, inner));
     }

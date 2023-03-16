@@ -33,7 +33,7 @@ pub fn main() {
             }
             else {
                 let mut writer = std::io::BufWriter::new(std::fs::File::create(output_file).expect("Failed to open output file!"));
-                writer.write(built_report.as_bytes()).expect("Failed to write all data");
+                writer.write_all(built_report.as_bytes()).expect("Failed to write all data");
             }
         },
         None => {

@@ -51,7 +51,7 @@ fn build_host_table(rows: &[Vec<String>]) -> Table {
     for row in rows {
         let mut r = TableRow::new();
         for entry in row {
-            if entry.len() > 0 {
+            if !entry.is_empty() {
                 r.add_cell(TableCell::new(TableCellType::Data).with_link(format!("#algo-{entry}"), entry));
             }
             else {
@@ -78,7 +78,7 @@ pub fn create_host_table(host: &Host) -> Container {
 }
 
 pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
-    if hosts.len() < 1 { return create_page().to_html_string(); }
+    if hosts.is_empty() { return create_page().to_html_string(); }
     let mut page = create_page();
     for host_table in hosts.iter().map(create_host_table) {
         page.add_container(host_table);
