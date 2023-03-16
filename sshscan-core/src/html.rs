@@ -54,14 +54,15 @@ pub fn create_host_table(host: &Host) -> Container {
 
 pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
     if hosts.len() < 1 { return create_page().to_html_string(); }
-    let page = create_page().with_container(
-        hosts.iter().map(create_host_table).reduce(|mut acc, c|{acc.add_container(c); acc}).unwrap()
-    )
-    .with_container(create_algo_list(HOST_HEADER[0], &agg_data.kex_algos))
-    .with_container(create_algo_list(HOST_HEADER[1], &agg_data.host_key_algos))
-    .with_container(create_algo_list(HOST_HEADER[2], &agg_data.encryption_algos))
-    .with_container(create_algo_list(HOST_HEADER[3], &agg_data.mac_algos))
-    .with_container(create_algo_list(HOST_HEADER[4], &agg_data.compression_algos));
+    let mut page = create_page();
+    for host_table in hosts.iter().map(create_host_table) {
+        page.add_container(host_table);
+    }
+    page.add_container(create_algo_list(HOST_HEADER[0], &agg_data.kex_algos));
+    page.add_container(create_algo_list(HOST_HEADER[1], &agg_data.host_key_algos));
+    page.add_container(create_algo_list(HOST_HEADER[2], &agg_data.encryption_algos));
+    page.add_container(create_algo_list(HOST_HEADER[3], &agg_data.mac_algos));
+    page.add_container(create_algo_list(HOST_HEADER[4], &agg_data.compression_algos));
     page.to_html_string()
 }
 
