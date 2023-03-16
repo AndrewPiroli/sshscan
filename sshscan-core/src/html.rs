@@ -20,13 +20,16 @@ const HEADER_ID: &[&str; 5] = &[
     "sshscan-id-compr",
 ];
 
+const LINK: &str = "https://github.com/AndrewPiroli/sshscan/";
+const NAME: &str = "sshscan";
+
 const STYLE: &str = include_str!("style.css");
 
 fn create_page() -> HtmlPage {
     let time = {
         use chrono::prelude::*;
         let time: DateTime<Local> = Local::now();
-        time.format("%Y-%m-%d %H.%M UTC%z").to_string()
+        time.format("%Y-%m-%dT%H.%M%z").to_string()
     };
 
     let page = HtmlPage::new()
@@ -38,7 +41,8 @@ fn create_page() -> HtmlPage {
     .with_meta([("generator", "https://github.com/AndrewPiroli/sshscan/")])
     .with_meta([("charset", "UTF-8")])
     .with_meta([("viewport", "width=device-width, initial-scale=1.0, user-scalable=yes")])
-    .with_header(2, "Host Report")
+    .with_header(1, format!("<a href={LINK}>{NAME}</a> Report - Generated: {time}"))
+    .with_header(2, "Hosts")
 }
 
 fn build_host_table(rows: &[Vec<String>]) -> Table {
