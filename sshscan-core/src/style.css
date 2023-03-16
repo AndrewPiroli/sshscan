@@ -1,41 +1,33 @@
 table, th, td {
-    border: 1px solid black;
-	text-align: center;
-	vertical-align: middle;
-}
-tr.header-row > td {
-    padding-left: 10px;
-	padding-right: 10px;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
 }
 table {
-	vertical-align: middle;
-	width: 1200px;
+  vertical-align: middle;
+  width: 1200px;
 }
-
 html {
-	height: 100%;
+height: 100%;
 }
-
 body {
-	height: 100%;
-    margin: 40px auto;
-    max-width: 1200px;
-    line-height: 1.6;
-    font-size: 18px;
-    color: black;
-    padding: 0 10px;
-    background-color: #EEEEEE;
+  height: 100%;
+  margin: 40px auto;
+  max-width: 1200px;
+  line-height: 1.6;
+  font-size: 18px;
+  color: black;
+  padding: 0 10px;
+  background-color: #EEEEEE;
 }
-
 a:link, a:visited {
-    color: black;
+  color: black;
 }
-a:hover a:active {
-    color: grey;
+a:hover, a:active {
+  color: darkgray;
 }
-
 @media print {
-    table {page-break-inside: avoid;}
-    .sshscan-htable-outer { page-break-inside: avoid; }
-    .sshscan-alist-outer { page-break-before: always; }
+  table {page-break-inside: avoid;}
+  .sshscan-htable-outer { page-break-inside: avoid; }
+  .sshscan-alist-outer { page-break-before: always; }
 }
