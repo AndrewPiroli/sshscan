@@ -36,4 +36,6 @@ a:hover a:active {
 
 @media print {
     table {page-break-inside: avoid;}
+    .sshscan-htable-outer { page-break-inside: avoid; }
+    .sshscan-alist-outer { page-break-before: always; }
 }
