@@ -37,10 +37,10 @@ fn create_page() -> HtmlPage {
     .with_style(STYLE);
     
     page
-    .with_meta([("date", time.as_str())])
-    .with_meta([("generator", "https://github.com/AndrewPiroli/sshscan/")])
+    .with_meta([("name","date"), ("content", time.as_str())])
+    .with_meta([("name","generator"), ("content", LINK)])
     .with_meta([("charset", "UTF-8")])
-    .with_meta([("viewport", "width=device-width, initial-scale=1.0, user-scalable=yes")])
+    .with_meta([("name","viewport"), ("content", "width=device-width, initial-scale=1.0, user-scalable=yes")])
     .with_header(1, format!("<a href={LINK}>{NAME}</a> Report - Generated: {time}"))
     .with_header(2, "Hosts")
 }
