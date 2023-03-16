@@ -22,7 +22,7 @@ const HEADER_ID: &[&str; 5] = &[
 
 const STYLE: &str = include_str!("style.css");
 
-pub fn create_page() -> HtmlPage {
+fn create_page() -> HtmlPage {
     let time = {
         use chrono::prelude::*;
         let time: DateTime<Local> = Local::now();
@@ -64,7 +64,7 @@ fn build_host_table(rows: &[Vec<String>]) -> Table {
     tab
 }
 
-pub fn create_host_table(host: &Host) -> Container {
+fn create_host_table(host: &Host) -> Container {
     let mut c = Container::new(ContainerType::Div).with_attributes([("class", "sshscan-htable-outer")]);
     let data = agg_data::wrangle_host_to_table(host);
     for t in data {
@@ -92,7 +92,7 @@ pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
     page.to_html_string()
 }
 
-pub fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Host>>) -> Container {
+fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Host>>) -> Container {
     let mut c = Container::new(ContainerType::Div)
     .with_attributes([("class", "sshscan-alist-outer")])
     .with_header_attr(2, title, [("id", title_id)]);
