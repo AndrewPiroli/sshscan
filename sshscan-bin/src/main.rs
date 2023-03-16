@@ -1,4 +1,4 @@
-use sshscan_core::{xml, agg_data};
+use sshscan_core::xml;
 use std::io::Read;
 
 pub fn main() {
@@ -13,6 +13,6 @@ pub fn main() {
             proccessed_hosts.push(found);
         }
     }
-    let test = agg_data::AggregatedData::build_from_hosts(&proccessed_hosts);
-    dbg!(test);
+    let test_tab = sshscan_core::html::create_host_table(&proccessed_hosts[0]);
+    println!("{}", sshscan_core::html::testing(test_tab));
 }

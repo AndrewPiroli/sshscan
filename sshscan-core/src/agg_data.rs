@@ -65,3 +65,30 @@ impl<'host> AggregatedData<'host> {
         res
     }
 }
+
+pub fn wrangle_host_to_table(host: &Host) -> Vec<(u16, Vec<Vec<String>>)> {
+    let mut res: Vec<(u16, Vec<Vec<String>>)> = Vec::new();
+    for port in host.port_states.iter() {
+        let mut inner: Vec<Vec<String>> = Vec::with_capacity(5);
+        inner.resize_with(5, Default::default);
+        let longest = port.algos.longest();
+        for i in 0..longest {
+            // Weird transpose from
+            // A B C
+            // X Y Z
+            // to
+            // A X
+            // B Y
+            // C Z
+            let mut inner2 = Vec::new();
+            inner2.push(port.algos.kex_algos.get(i).unwrap_or(&String::new()).to_string());
+            inner2.push(port.algos.host_key_algos.get(i).unwrap_or(&String::new()).to_string());
+            inner2.push(port.algos.encryption_algos.get(i).unwrap_or(&String::new()).to_string());
+            inner2.push(port.algos.mac_algos.get(i).unwrap_or(&String::new()).to_string());
+            inner2.push(port.algos.compression_algos.get(i).unwrap_or(&String::new()).to_string());
+            inner.push(inner2);
+        }
+        res.push((port.portid, inner));
+    }
+    res
+}

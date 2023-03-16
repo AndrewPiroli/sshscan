@@ -1,5 +1,6 @@
 pub mod xml;
 pub mod agg_data;
+pub mod html;
 
 use std::num::ParseIntError;
 use std::str::FromStr;
@@ -75,5 +76,14 @@ impl Algos {
                 panic!("fixme")
             }
         }
+    }
+    fn longest(&self) -> usize {
+        let mut len = 0usize;
+        if len < self.kex_algos.len() { len = self.kex_algos.len(); }
+        if len < self.host_key_algos.len() { len = self.host_key_algos.len(); }
+        if len < self.encryption_algos.len() { len = self.encryption_algos.len(); }
+        if len < self.mac_algos.len() { len = self.mac_algos.len(); }
+        if len < self.compression_algos.len() { len = self.compression_algos.len(); }
+        len
     }
 }
