@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use build_html::{self, HtmlPage, Table, HtmlContainer, ContainerType, Container, Html, TableRow};
+use build_html::{self, HtmlPage, Table, HtmlContainer, ContainerType, Container, Html, TableRow, TableCell, TableCellType};
 
 use crate::{agg_data::{self, AggregatedData}, Host};
 
@@ -10,6 +10,14 @@ const HOST_HEADER: &[&str; 5] = &[
     "Encryption Algos",
     "MAC Algos",
     "Compression Algos",
+];
+
+const HEADER_ID: &[&str; 5] = &[
+    "sshscan-id-kex",
+    "sshscan-id-hkey",
+    "sshscan-id-enc",
+    "sshscan-id-mac",
+    "sshscan-id-compr",
 ];
 
 const STYLE: &str = include_str!("style.css");
@@ -32,10 +40,18 @@ pub fn create_page() -> HtmlPage {
     .with_meta([("viewport", "width=device-width, initial-scale=1.0, user-scalable=yes")])
 }
 
-pub fn create_table_generic(header: &[&str], rows: &[Vec<String>]) -> Table {
-    Table::from(rows)
-    .with_attributes([("class", "sshscan-table")])
-    .with_custom_header_row(TableRow::from(header).with_attributes([("class", "header-row")]))
+fn build_host_table(rows: &[Vec<String>]) -> Table {
+    let mut tab = Table::new().with_attributes([("class", "sshscan-table")]);
+    tab.add_custom_header_row(TableRow::new()
+    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[0]), HOST_HEADER[0]))
+    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[1]), HOST_HEADER[1]))
+    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[2]), HOST_HEADER[2]))
+    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[3]), HOST_HEADER[3]))
+    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[4]), HOST_HEADER[4])));
+    for row in rows {
+        tab.add_body_row(row)
+    }
+    tab
 }
 
 pub fn create_host_table(host: &Host) -> Container {
@@ -45,7 +61,7 @@ pub fn create_host_table(host: &Host) -> Container {
         let id = format!("{}:{}", host.addr, t.0);
         let mut inner = Container::new(ContainerType::Div).with_attributes([("class", "sshscan-htable-inner"), ("id", id.as_str())]);
         inner.add_html(format!("<h3>{id}</h3>"));
-        let tab = create_table_generic(HOST_HEADER, &t.1);
+        let tab = build_host_table(&t.1);
         inner.add_table(tab);
         c.add_container(inner);
     }
@@ -58,18 +74,18 @@ pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
     for host_table in hosts.iter().map(create_host_table) {
         page.add_container(host_table);
     }
-    page.add_container(create_algo_list(HOST_HEADER[0], &agg_data.kex_algos));
-    page.add_container(create_algo_list(HOST_HEADER[1], &agg_data.host_key_algos));
-    page.add_container(create_algo_list(HOST_HEADER[2], &agg_data.encryption_algos));
-    page.add_container(create_algo_list(HOST_HEADER[3], &agg_data.mac_algos));
-    page.add_container(create_algo_list(HOST_HEADER[4], &agg_data.compression_algos));
+    page.add_container(create_algo_list(HOST_HEADER[0],HEADER_ID[0], &agg_data.kex_algos));
+    page.add_container(create_algo_list(HOST_HEADER[1],HEADER_ID[1], &agg_data.host_key_algos));
+    page.add_container(create_algo_list(HOST_HEADER[2],HEADER_ID[2], &agg_data.encryption_algos));
+    page.add_container(create_algo_list(HOST_HEADER[3],HEADER_ID[3], &agg_data.mac_algos));
+    page.add_container(create_algo_list(HOST_HEADER[4],HEADER_ID[4], &agg_data.compression_algos));
     page.to_html_string()
 }
 
-pub fn create_algo_list(title: &str, list: &HashMap<String, Vec<&Host>>) -> Container {
+pub fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Host>>) -> Container {
     let mut c = Container::new(ContainerType::Div)
     .with_attributes([("class", "sshscan-alist-outer")])
-    .with_html(format!("<h2>{title}</h2>"));
+    .with_html(format!("<h2 id={title_id}>{title}</h2>"));
     for algo in list {
         let mut inner = Container::new(ContainerType::UnorderedList)
         .with_attributes([("class", "sshscan-alist-inner")]);

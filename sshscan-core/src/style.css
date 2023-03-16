@@ -22,9 +22,16 @@ body {
     max-width: 1200px;
     line-height: 1.6;
     font-size: 18px;
-    color: #000000;
+    color: black;
     padding: 0 10px;
     background-color: #EEEEEE;
+}
+
+a:link, a:visited {
+    color: black;
+}
+a:hover a:active {
+    color: grey;
 }
 
 @media print {
