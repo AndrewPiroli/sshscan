@@ -38,6 +38,7 @@ pub fn create_page() -> HtmlPage {
     .with_meta([("generator", "https://github.com/AndrewPiroli/sshscan/")])
     .with_meta([("charset", "UTF-8")])
     .with_meta([("viewport", "width=device-width, initial-scale=1.0, user-scalable=yes")])
+    .with_header(2, "Host Report")
 }
 
 fn build_host_table(rows: &[Vec<String>]) -> Table {
@@ -69,7 +70,7 @@ pub fn create_host_table(host: &Host) -> Container {
     for t in data {
         let id = format!("{}:{}", host.addr, t.0);
         let mut inner = Container::new(ContainerType::Div).with_attributes([("class", "sshscan-htable-inner"), ("id", id.as_str())]);
-        inner.add_html(format!("<h3>{id}</h3>"));
+        inner.add_header(3, id);
         let tab = build_host_table(&t.1);
         inner.add_table(tab);
         c.add_container(inner);
@@ -94,7 +95,7 @@ pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
 pub fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Host>>) -> Container {
     let mut c = Container::new(ContainerType::Div)
     .with_attributes([("class", "sshscan-alist-outer")])
-    .with_html(format!("<h2 id={title_id}>{title}</h2>"));
+    .with_header_attr(2, title, [("id", title_id)]);
     for algo in list {
         let mut inner = Container::new(ContainerType::UnorderedList)
         .with_attributes([("class", "sshscan-alist-inner")]);
@@ -104,7 +105,9 @@ pub fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<
                 inner.add_link(format!("#{id}"), id.as_str());
             }
         }
-        c.add_container(Container::new(ContainerType::Div).with_html(format!("<h3 id=algo-{}>{}</h3>", algo.0, algo.0)).with_container(inner));
+        c.add_container(Container::new(ContainerType::Div)
+        .with_header_attr(3, algo.0, [("id", format!("algo-{}", algo.0).as_str())])
+        .with_container(inner));
     }
     c
 }
