@@ -88,11 +88,11 @@ pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
     for host_table in hosts.iter().map(create_host_table) {
         page.add_container(host_table);
     }
-    page.add_container(create_algo_list(HOST_HEADER[0],HEADER_ID[0], &agg_data.kex_algos));
-    page.add_container(create_algo_list(HOST_HEADER[1],HEADER_ID[1], &agg_data.host_key_algos));
-    page.add_container(create_algo_list(HOST_HEADER[2],HEADER_ID[2], &agg_data.encryption_algos));
-    page.add_container(create_algo_list(HOST_HEADER[3],HEADER_ID[3], &agg_data.mac_algos));
-    page.add_container(create_algo_list(HOST_HEADER[4],HEADER_ID[4], &agg_data.compression_algos));
+    page.add_container(create_algo_list(HOST_HEADER[0],HEADER_ID[0], &agg_data["kex_algos"]));
+    page.add_container(create_algo_list(HOST_HEADER[1],HEADER_ID[1], &agg_data["host_key_algos"]));
+    page.add_container(create_algo_list(HOST_HEADER[2],HEADER_ID[2], &agg_data["encryption_algos"]));
+    page.add_container(create_algo_list(HOST_HEADER[3],HEADER_ID[3], &agg_data["mac_algos"]));
+    page.add_container(create_algo_list(HOST_HEADER[4],HEADER_ID[4], &agg_data["compression_algos"]));
     page.to_html_string()
 }
 

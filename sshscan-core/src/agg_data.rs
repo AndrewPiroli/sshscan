@@ -3,11 +3,11 @@ use std::collections::HashMap;
 
 #[derive(Debug, Default, Clone)]
 pub struct AggregatedData<'host> {
-    pub kex_algos: HashMap<String, Vec<&'host Host>>,
-    pub host_key_algos: HashMap<String, Vec<&'host Host>>,
-    pub encryption_algos: HashMap<String, Vec<&'host Host>>,
-    pub mac_algos: HashMap<String, Vec<&'host Host>>,
-    pub compression_algos: HashMap<String, Vec<&'host Host>>,
+    kex_algos: HashMap<String, Vec<&'host Host>>,
+    host_key_algos: HashMap<String, Vec<&'host Host>>,
+    encryption_algos: HashMap<String, Vec<&'host Host>>,
+    mac_algos: HashMap<String, Vec<&'host Host>>,
+    compression_algos: HashMap<String, Vec<&'host Host>>,
 }
 
 impl<'host> AggregatedData<'host> {
@@ -63,6 +63,21 @@ impl<'host> AggregatedData<'host> {
             }
         }
         res
+    }
+}
+
+impl<'host> std::ops::Index<&'static str> for AggregatedData<'host> {
+    type Output = HashMap<String, Vec<&'host Host>>;
+
+    fn index(&self, index: &'static str) -> &Self::Output {
+        match index {
+            "kex_algos" => { &self.kex_algos },
+            "host_key_algos" => { &self.host_key_algos },
+            "encryption_algos" => { &self.encryption_algos },
+            "mac_algos" => { &self.mac_algos },
+            "compression_algos" => { &self.compression_algos },
+            _ => panic!("Invalid key")
+        }
     }
 }
 
