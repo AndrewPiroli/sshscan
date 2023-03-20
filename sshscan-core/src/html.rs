@@ -1,28 +1,16 @@
 use std::collections::HashMap;
-
 use build_html::{self, HtmlPage, Table, HtmlContainer, ContainerType, Container, Html, TableRow, TableCell, TableCellType};
-
 use crate::{agg_data::{self, AggregatedData}, Host};
 
-const HOST_HEADER: &[&str; 5] = &[
-    "Kex Algos",
-    "Host Key Algos",
-    "Encryption Algos",
-    "MAC Algos",
-    "Compression Algos",
+const HOST_HEADER: &[(&str, &str, &str); 5] = &[
+    ("Kex Algos", "sshscan-id-kex", "kex_algos"),
+    ("Host Key Algos", "sshscan-id-hkey", "host_key_algos"),
+    ("Encryption Algos", "sshscan-id-enc", "encryption_algos"),
+    ("MAC Algos", "sshscan-id-mac", "mac_algos"),
+    ("Compression Algos", "sshscan-id-compr", "compression_algos"),
 ];
-
-const HEADER_ID: &[&str; 5] = &[
-    "sshscan-id-kex",
-    "sshscan-id-hkey",
-    "sshscan-id-enc",
-    "sshscan-id-mac",
-    "sshscan-id-compr",
-];
-
 const LINK: &str = "https://github.com/AndrewPiroli/sshscan/";
 const NAME: &str = "sshscan";
-
 const STYLE: &str = include_str!("style.css");
 
 fn create_page() -> HtmlPage {
@@ -47,12 +35,14 @@ fn create_page() -> HtmlPage {
 
 fn build_host_table(rows: &[Vec<String>]) -> Table {
     let mut tab = Table::new().with_attributes([("class", "sshscan-table")]);
-    tab.add_custom_header_row(TableRow::new()
-    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[0]), HOST_HEADER[0]))
-    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[1]), HOST_HEADER[1]))
-    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[2]), HOST_HEADER[2]))
-    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[3]), HOST_HEADER[3]))
-    .with_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", HEADER_ID[4]), HOST_HEADER[4])));
+    let header_row = {
+        let mut header_row = TableRow::new();
+        for header in HOST_HEADER {
+            header_row.add_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", header.1), header.0))
+        }
+        header_row
+    };
+    tab.add_custom_header_row(header_row);
     for row in rows {
         let mut r = TableRow::new();
         for entry in row {
@@ -88,11 +78,9 @@ pub fn generate(hosts: &[Host], agg_data: &AggregatedData) -> String {
     for host_table in hosts.iter().map(create_host_table) {
         page.add_container(host_table);
     }
-    page.add_container(create_algo_list(HOST_HEADER[0],HEADER_ID[0], &agg_data["kex_algos"]));
-    page.add_container(create_algo_list(HOST_HEADER[1],HEADER_ID[1], &agg_data["host_key_algos"]));
-    page.add_container(create_algo_list(HOST_HEADER[2],HEADER_ID[2], &agg_data["encryption_algos"]));
-    page.add_container(create_algo_list(HOST_HEADER[3],HEADER_ID[3], &agg_data["mac_algos"]));
-    page.add_container(create_algo_list(HOST_HEADER[4],HEADER_ID[4], &agg_data["compression_algos"]));
+    for header in HOST_HEADER {
+        page.add_container(create_algo_list(header.0, header.1, &agg_data[header.2]));
+    }
     page.to_html_string()
 }
 
