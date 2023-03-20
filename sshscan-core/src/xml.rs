@@ -104,7 +104,7 @@ fn process_script(script_elem: &Element, algos: &mut Algos) -> Result<(), SshSca
                 .ok_or(SshScanErr::XMLInvalid)?
                 .as_text()
                 .ok_or(SshScanErr::XMLInvalid)?;
-            algos.vec_from_xml_key(key).push(row.to_owned());
+            algos[key].push(row.to_owned());
         }
     }
     Ok(())

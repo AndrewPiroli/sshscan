@@ -57,26 +57,14 @@ pub struct Description {
 
 #[derive(Debug, Default, Clone)]
 pub struct Algos {
-    pub kex_algos: Vec<String>,
-    pub host_key_algos: Vec<String>,
-    pub encryption_algos: Vec<String>,
-    pub mac_algos: Vec<String>,
-    pub compression_algos: Vec<String>,
+    kex_algos: Vec<String>,
+    host_key_algos: Vec<String>,
+    encryption_algos: Vec<String>,
+    mac_algos: Vec<String>,
+    compression_algos: Vec<String>,
 }
 
 impl Algos {
-    fn vec_from_xml_key(&mut self, key: &str) -> &mut Vec<String> {
-        match key {
-            "kex_algorithms" => &mut self.kex_algos,
-            "server_host_key_algorithms" => &mut self.host_key_algos,
-            "encryption_algorithms" => &mut self.encryption_algos,
-            "mac_algorithms" => &mut self.mac_algos,
-            "compression_algorithms" => &mut self.compression_algos,
-            _ => {
-                panic!("fixme")
-            }
-        }
-    }
     fn longest(&self) -> usize {
         let mut len = 0usize;
         if len < self.kex_algos.len() { len = self.kex_algos.len(); }
@@ -85,5 +73,33 @@ impl Algos {
         if len < self.mac_algos.len() { len = self.mac_algos.len(); }
         if len < self.compression_algos.len() { len = self.compression_algos.len(); }
         len
+    }
+}
+
+impl std::ops::Index<&str> for Algos {
+    type Output = Vec<String>;
+
+    fn index(&self, index: &str) -> &Self::Output {
+        match index {
+            "kex_algorithms" => &self.kex_algos,
+            "server_host_key_algorithms" => &self.host_key_algos,
+            "encryption_algorithms" => &self.encryption_algos,
+            "mac_algorithms" => &self.mac_algos,
+            "compression_algorithms" => &self.compression_algos,
+            _ => panic!("Invalid index"),
+        }
+    }
+}
+
+impl std::ops::IndexMut<&str> for Algos {
+    fn index_mut(&mut self, index: &str) -> &mut Self::Output {
+        match index {
+            "kex_algorithms" => &mut self.kex_algos,
+            "server_host_key_algorithms" => &mut self.host_key_algos,
+            "encryption_algorithms" => &mut self.encryption_algos,
+            "mac_algorithms" => &mut self.mac_algos,
+            "compression_algorithms" => &mut self.compression_algos,
+            _ => panic!("Invalid index"),
+        }
     }
 }
