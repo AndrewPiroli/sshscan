@@ -6,6 +6,7 @@ use std::num::ParseIntError;
 use std::str::FromStr;
 use thiserror::Error;
 
+
 #[derive(Error, Debug)]
 pub enum SshScanErr {
     #[error("XML Input malformed")]
@@ -16,6 +17,7 @@ pub enum SshScanErr {
     XMLParseFailure(#[from] xmltree::ParseError),
 }
 
+#[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Default, Clone)]
 pub struct Host {
     pub status: HostStatus,
@@ -23,6 +25,7 @@ pub struct Host {
     pub port_states: Vec<Description>,
 }
 
+#[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Clone)]
 pub enum HostStatus {
     Up,
@@ -48,6 +51,7 @@ impl Default for HostStatus {
     }
 }
 
+#[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Default, Clone)]
 pub struct Description {
     pub portid: u16,
@@ -55,6 +59,7 @@ pub struct Description {
     pub algos: Algos,
 }
 
+#[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Default, Clone)]
 pub struct Algos {
     kex_algos: Vec<String>,
