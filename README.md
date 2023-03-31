@@ -16,7 +16,7 @@ Options:
 ```
 
 ## Scan
-Scan and generate report
+Scan and generate report. Requires nmap installed and available in PATH.
 
 ```
 Usage: sshscan-bin scan [OPTIONS] <CIDR> [PORT] [AGGRESSIVE]
