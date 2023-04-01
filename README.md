@@ -13,6 +13,7 @@ Arguments:
 
 Options:
   -o, --output <OUTPUT_FILE>  Output file to write
+  -i, --include-down <INCLUDE_DOWN>  Include hosts that are down (default: false) [possible values: true, false]
   -h, --help                  Print help
 ```
 
@@ -28,6 +29,7 @@ Arguments:
 
 Options:
   -o, --output <OUTPUT_FILE>  Output file to write
+  -i, --include-down <INCLUDE_DOWN>  Include hosts that are down (default: false) [possible values: true, false]
   -h, --help                  Print help
 ```
 

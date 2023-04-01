@@ -2,21 +2,21 @@ use crate::*;
 use xmltree::{Element, XMLNode};
 
 
-pub fn process_xml<R>(xml: R) -> Result<Vec<Result<Host, SshScanErr>>, SshScanErr>
+pub fn process_xml<R>(xml: R, filter_down: bool) -> Result<Vec<Result<Host, SshScanErr>>, SshScanErr>
 where R: std::io::Read {
     let mut res = Vec::new();
     let root = Element::parse(xml)?;
     for e in root.children.iter() {
         if let Some(elem) = e.as_element() {
             if elem.name == "host" {
-                res.push(process_host(elem));
+                res.push(process_host(elem, filter_down));
             }
         }
     }
     Ok(res)
 }
 
-fn process_host(host_elem: &Element) -> Result<Host, SshScanErr> {
+fn process_host(host_elem: &Element, filter_down: bool) -> Result<Host, SshScanErr> {
     let mut host_addr = String::new();
     let mut host_status: HostStatus = HostStatus::Unknown;
     let mut descrs: Vec<Description> = Vec::new();
@@ -39,7 +39,11 @@ fn process_host(host_elem: &Element) -> Result<Host, SshScanErr> {
                 }
                 "ports" => {
                     for port_elem in child.children.iter() {
-                        descrs.push(process_host_port(port_elem)?);
+                        let port = process_host_port(port_elem)?;
+                        match (&port.state, filter_down) {
+                            (false, true) => {},
+                            _ => { descrs.push(port); }
+                        }
                     }
                 }
                 _ => {
