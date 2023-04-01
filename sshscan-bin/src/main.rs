@@ -68,15 +68,24 @@ pub fn main() {
             generate(cur, config)
         },
         Commands::Scan { cidr, port, aggressive } => {
-            scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), config);
+
+            match scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), config) {
+                Err(e) => eprintln!("Error: {}", e.to_string()),
+                _ => {},
+            }
         },
     }
 
 }
 
-fn scan_and_gen(cidr: impl AsRef<str>, port: u16, agressive: bool, config: SshScanConfig) {
+fn scan_and_gen(cidr: impl AsRef<str>, port: u16, agressive: bool, config: SshScanConfig) -> Result<(), sshscan_core::SshScanErr> {
     use std::process::*;
-    let nmap_exe = which::which("nmap").unwrap();
+    let nmap_exe = match which::which("nmap") {
+        Ok(exe) => exe,
+        Err(_) => {
+            return Err(sshscan_core::SshScanErr::Other("nmap not found in $PATH".to_owned()));
+        },
+    };
     let mut nmap_handle = Command::new(nmap_exe);
     if agressive {
         nmap_handle.arg("-T5");
@@ -93,7 +102,8 @@ fn scan_and_gen(cidr: impl AsRef<str>, port: u16, agressive: bool, config: SshSc
     let process_output = nmap_handle.spawn().unwrap().wait_with_output().unwrap();
     let data = String::from_utf8(process_output.stdout).unwrap();
     let cur = std::io::Cursor::new(data);
-    generate(cur, config)
+    generate(cur, config);
+    Ok(())
 }
 
 

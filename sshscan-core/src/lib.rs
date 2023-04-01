@@ -15,6 +15,8 @@ pub enum SshScanErr {
     ParseIntError(#[from] ParseIntError),
     #[error("Failed to parse XML")]
     XMLParseFailure(#[from] xmltree::ParseError),
+    #[error("Error: {0}")]
+    Other(String),
 }
 
 #[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]

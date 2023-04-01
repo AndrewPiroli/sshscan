@@ -306,7 +306,7 @@ checksum = "1792db035ce95be60c3f8853017b3999209281c24e2ba5bc8e59bf97a0c590c1"
 
 [[package]]
 name = "sshscan-bin"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "clap",
  "sshscan-core",
@@ -315,7 +315,7 @@ dependencies = [
 
 [[package]]
 name = "sshscan-core"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "arbitrary",
  "build_html",
