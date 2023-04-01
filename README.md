@@ -1,20 +1,5 @@
 # Audit SSH algorithms in use
 
-## Generate
-
-Generate a report based on existing scan data
-
-```
-Usage: sshscan-bin generate [OPTIONS] <INPUT_FILE>
-
-Arguments:
-  <INPUT_FILE>  Input XML file to read from
-
-Options:
-  -o, --output <OUTPUT_FILE>  Output file to write
-  -h, --help                  Print help
-```
-
 ## Scan
 Scan and generate report. Requires nmap installed and available in PATH.
 
@@ -25,6 +10,21 @@ Arguments:
   <CIDR>        Range to scan in CIDR format X.X.X.X/X
   [PORT]        Port to scan (default: 22)
   [AGGRESSIVE]  Agressive mode (-T5) (default: true) [possible values: true, false]
+
+Options:
+  -o, --output <OUTPUT_FILE>  Output file to write
+  -h, --help                  Print help
+```
+
+## Generate
+
+Generate a report based on existing scan data
+
+```
+Usage: sshscan-bin generate [OPTIONS] <INPUT_FILE>
+
+Arguments:
+  <INPUT_FILE>  Input XML file to read from
 
 Options:
   -o, --output <OUTPUT_FILE>  Output file to write
