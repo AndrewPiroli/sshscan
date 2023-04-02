@@ -8,3 +8,7 @@ license = "BSD-3-Clause"
 sshscan-core = { path = "../sshscan-core" }
 clap = { version = "4.2.1", default-features = false, features = ["std", "derive", "help", "usage", "suggestions", "error-context"] }
 which = { version = "4.4.0", default-features = false }
+
+[[bin]]
+name = "sshscan"
+path = "src/main.rs"

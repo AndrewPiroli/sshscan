@@ -4,7 +4,7 @@
 Scan and generate report. Requires nmap installed and available in PATH.
 
 ```
-Usage: sshscan-bin scan [OPTIONS] <CIDR> [PORT] [AGGRESSIVE]
+Usage: sshscan scan [OPTIONS] <CIDR> [PORT] [AGGRESSIVE]
 
 Arguments:
   <CIDR>        Range to scan in CIDR format X.X.X.X/X
@@ -22,7 +22,7 @@ Options:
 Generate a report based on existing scan data
 
 ```
-Usage: sshscan-bin generate [OPTIONS] <INPUT_FILE>
+Usage: sshscan generate [OPTIONS] <INPUT_FILE>
 
 Arguments:
   <INPUT_FILE>  Input XML file to read from
@@ -38,9 +38,9 @@ Options:
 
 ```shell
 nmap -T5 -p22 --script ssh2-enum-algos 192.168.0.0/24 -oX output.xml
-sshscan-bin generate output.xml -o output.html
+sshscan generate output.xml -o output.html
 ```
 
 ```shell
-sshscan-bin scan 192.168.0.0/24 -o output.html
+sshscan scan 192.168.0.0/24 -o output.html
 ```
