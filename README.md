@@ -1,5 +1,23 @@
 # Audit SSH algorithms in use
 
+Generates an HTML report containing information of the SSH servers on your network.
+
+Information includes:
+ * Host/port of SSH servers
+ * Key Exchange Algorithms
+ * Host Key Algorithms
+ * Encryption Algorithms
+ * MAC Algorithms
+ * Compression Algorithms
+
+The data is organized in 2 ways:
+ 1) A hosts section, with a tabular view of algorithms per host
+ 2) A alogirthms section, with a list view of hosts per algorithm
+
+Having these multiple views allows you to quickly locate the information you want.
+Internal hyperlinks are used extensively to allow jumping between hosts and specific algorithms.
+
+
 ## Scan
 Scan and generate report. Requires nmap installed and available in PATH.
 
