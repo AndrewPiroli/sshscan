@@ -63,6 +63,7 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
     let mut state = false;
     let mut port = 0u16;
     let mut algos = Default::default();
+    let mut product: Option<String> = None;
     if let Some(port_elem) = port_elem.as_element() {
         port = port_elem
             .attributes
@@ -79,6 +80,25 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
                     "script" => {
                         process_script(child, &mut algos)?;
                     }
+                    "service" => {
+                        let mut temp = String::new();
+                        if let Some(prod) = child.attributes.get("product") {
+                            temp += prod;
+                            temp += " ";
+                        }
+                        if let Some(ver) = child.attributes.get("version") {
+                            temp += ver;
+                            temp += " ";
+                        }
+                        if let Some(xtra) = child.attributes.get("extrainfo") {
+                            temp += xtra;
+                            temp += " ";
+                        }
+                        if !temp.is_empty() {
+                            temp.truncate(temp.rfind(" ").unwrap());
+                            product = Some(temp);
+                        }
+                    }
                     _ => {}
                 }
             }
@@ -88,6 +108,7 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
         portid: port,
         state,
         algos,
+        product,
     })
 }
 

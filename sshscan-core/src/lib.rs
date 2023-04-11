@@ -59,6 +59,7 @@ pub struct Description {
     pub portid: u16,
     pub state: bool,
     pub algos: Algos,
+    pub product: Option<String>,
 }
 
 #[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]

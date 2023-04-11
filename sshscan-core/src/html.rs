@@ -64,8 +64,8 @@ fn create_host_table(host: &Host) -> Container {
     for t in data {
         let id = format!("{}:{}", host.addr, t.0);
         let mut inner = Container::new(ContainerType::Div).with_attributes([("class", "sshscan-htable-inner"), ("id", id.as_str())]);
-        inner.add_header(3, id);
-        let tab = build_host_table(&t.1);
+        inner.add_header(3, format!("{} {}", id, t.1.unwrap_or_default()));
+        let tab = build_host_table(&t.2);
         inner.add_table(tab);
         c.add_container(inner);
     }

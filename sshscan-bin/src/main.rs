@@ -39,7 +39,7 @@ enum Commands {
         /// Port to scan (default: 22)
         port: Option<u16>,
         /// Agressive mode (-T5) (default: true)
-        aggressive: Option<bool>
+        aggressive: Option<bool>,
     }
 }
 
@@ -92,6 +92,7 @@ fn scan_and_gen(cidr: impl AsRef<str>, port: u16, agressive: bool, config: SshSc
     } else {
         nmap_handle.arg("-T1");
     }
+    nmap_handle.arg("-sV");
     nmap_handle.arg(format!("-p{port}"));
     nmap_handle.arg("--script");
     nmap_handle.arg("ssh2-enum-algos");
