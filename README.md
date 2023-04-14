@@ -3,7 +3,7 @@
 Generates an HTML report containing information of the SSH servers on your network.
 
 Information includes:
- * Host/port of SSH servers
+ * Host/port/version of SSH servers
  * Key Exchange Algorithms
  * Host Key Algorithms
  * Encryption Algorithms
