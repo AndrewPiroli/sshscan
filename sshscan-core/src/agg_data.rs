@@ -54,8 +54,15 @@ impl<'host> std::ops::Index<&'static str> for AggregatedData<'host> {
     }
 }
 
-pub(crate) fn wrangle_host_to_table(host: &Host) -> Vec<(u16, Option<String>, Vec<Vec<String>>)> {
-    let mut res: Vec<(u16, Option<String>, Vec<Vec<String>>)> = Vec::new();
+#[derive(Debug, Clone)]
+pub(crate) struct HostTableView {
+    pub port: u16,
+    pub product: Option<String>,
+    pub algos: Vec<Vec<String>>,
+}
+
+pub(crate) fn wrangle_host_to_table(host: &Host) -> Vec<HostTableView> {
+    let mut res: Vec<HostTableView> = Vec::new();
     for port in host.port_states.iter() {
         let mut inner: Vec<Vec<String>> = Vec::with_capacity(5);
         inner.resize_with(5, Default::default);
@@ -76,7 +83,7 @@ pub(crate) fn wrangle_host_to_table(host: &Host) -> Vec<(u16, Option<String>, Ve
                 port.algos.compression_algos.get(i).unwrap_or(&String::new()).to_string(),
             ]);
         }
-        res.push((port.portid, port.product.clone(), inner));
+        res.push(HostTableView { port: port.portid, product: port.product.clone(), algos: inner });
     }
     res
 }
