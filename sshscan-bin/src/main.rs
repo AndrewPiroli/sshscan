@@ -69,9 +69,8 @@ pub fn main() {
         },
         Commands::Scan { cidr, port, aggressive } => {
 
-            match scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), config) {
-                Err(e) => eprintln!("Error: {}", e.to_string()),
-                _ => {},
+            if let Err(e) = scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), config) {
+                eprintln!("Error: {}", e);
             }
         },
     }
