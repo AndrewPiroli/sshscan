@@ -23,7 +23,8 @@ macro_rules! build {
                 }
             }
         )*
-    }; }
+    }; };
+    ($host:expr; $hp:expr; $res:expr) => {build!($host; $hp; $res; {kex host_key encryption mac compression})};
 }
 
 impl<'host> AggregatedData<'host> {
@@ -31,7 +32,7 @@ impl<'host> AggregatedData<'host> {
         let mut res = Self::default();
         for host in hosts {
             for host_port in &host.port_states {
-                build!(host; host_port; res; {kex host_key encryption mac compression});
+                build!(host; host_port; res);
             }
         }
         res
