@@ -1,5 +1,5 @@
 use sshscan_core::xml;
-use std::{path::PathBuf, io::Write};
+use std::{path::PathBuf, io::Write, process::ExitCode};
 use clap::{Parser, Subcommand};
 
 enum OutputType {
@@ -43,7 +43,7 @@ enum Commands {
     }
 }
 
-pub fn main() {
+pub fn main() -> ExitCode {
     let args = Args::parse();
     let output_file = match &args.output_file {
         Some(f) => {
@@ -63,15 +63,25 @@ pub fn main() {
     let config = SshScanConfig { output_file, include_down };
     match &args.command {
         Commands::Generate { input_file } => {
-            let data = std::fs::read_to_string(input_file).expect("Could not read input file!");
+            let data = match std::fs::read_to_string(input_file) {
+                Ok(s) => s,
+                Err(err) => {
+                    eprintln!("Failed to read input file at: {}", input_file.to_string_lossy());
+                    eprintln!("Reason: {}", err.to_string());
+                    return ExitCode::FAILURE;
+                },
+            };
             let cur = std::io::Cursor::new(data);
-            generate(cur, config)
+            generate(cur, config);
+            return ExitCode::SUCCESS;
         },
         Commands::Scan { cidr, port, aggressive } => {
 
             if let Err(e) = scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), config) {
                 eprintln!("Error: {}", e);
+                return ExitCode::FAILURE;
             }
+            return ExitCode::SUCCESS;
         },
     }
 
