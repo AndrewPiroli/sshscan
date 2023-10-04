@@ -1,5 +1,6 @@
 [workspace]
 members = ["sshscan-core", "sshscan-bin"]
+resolver = "2"
 
 [profile.release]
 lto = true
