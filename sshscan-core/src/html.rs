@@ -101,8 +101,7 @@ fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Hos
     .with_attributes([("class", "sshscan-alist-outer")])
     .with_header_attr(2, title, [("id", title_id)]);
     for algo in list {
-        let mut inner = Container::new(ContainerType::UnorderedList)
-        .with_attributes([("class", "sshscan-alist-inner")]);
+        let mut inner = Container::new(ContainerType::UnorderedList);
         for host in algo.1.iter() {
             for host_port in host.port_states.iter() {
                 let id = format!("{}:{}", host.addr, host_port.portid);
@@ -110,6 +109,7 @@ fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Hos
             }
         }
         c.add_container(Container::new(ContainerType::Div)
+        .with_attributes([("class", "sshscan-alist-inner")])
         .with_header_attr(3, algo.0, [("id", format!("algo-{}", algo.0).as_str())])
         .with_container(inner));
     }

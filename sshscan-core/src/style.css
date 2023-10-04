@@ -27,7 +27,8 @@ a:hover, a:active {
   color: darkgray;
 }
 @media print {
-  table {page-break-inside: avoid;}
+  table { page-break-inside: avoid; }
   .sshscan-htable-outer { page-break-inside: avoid; }
   .sshscan-alist-outer { page-break-before: always; }
+  .sshscan-alist-inner { page-break-inside: avoid; }
 }
