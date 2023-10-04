@@ -1,13 +1,13 @@
 [package]
 name = "sshscan-bin"
-version = "0.3.2"
+version = "0.3.3"
 edition = "2021"
 license = "BSD-3-Clause"
 
 [dependencies]
 sshscan-core = { path = "../sshscan-core" }
-clap = { version = "4.2.1", default-features = false, features = ["std", "derive", "help", "usage", "suggestions", "error-context"] }
-which = { version = "4.4.0", default-features = false }
+clap = { version = "~4.4.6", default-features = false, features = ["std", "derive", "help", "usage", "suggestions", "error-context"] }
+which = { version = "~4.4.2", default-features = false }
 
 [[bin]]
 name = "sshscan"

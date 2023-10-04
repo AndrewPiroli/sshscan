@@ -292,7 +292,7 @@ dependencies = [
 
 [[package]]
 name = "sshscan-bin"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "clap",
  "sshscan-core",
@@ -301,7 +301,7 @@ dependencies = [
 
 [[package]]
 name = "sshscan-core"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "arbitrary",
  "build_html",
