@@ -2,6 +2,11 @@
 members = ["sshscan-core", "sshscan-bin"]
 resolver = "2"
 
+[workspace.package]
+authors = ["Andrew Piroli"]
+license = "BSD-3-Clause"
+edition = "2021"
+
 [profile.release]
 lto = true
 
