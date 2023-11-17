@@ -7,7 +7,7 @@ edition.workspace = true
 
 [dependencies]
 sshscan-core = { path = "../sshscan-core" }
-clap = { version = "~4.4.6", default-features = false, features = ["std", "derive", "help", "usage", "suggestions", "error-context"] }
+clap = { version = "~4.4.8", default-features = false, features = ["std", "derive", "help", "usage", "suggestions", "error-context"] }
 which = { version = "~4.4.2", default-features = false }
 
 [[bin]]
