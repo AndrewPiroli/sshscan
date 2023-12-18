@@ -26,6 +26,9 @@ a:link, a:visited {
 a:hover, a:active {
   color: darkgray;
 }
+.header-count {
+  opacity: 70%;
+}
 @media print {
   table { page-break-inside: avoid; }
   .sshscan-htable-outer { page-break-inside: avoid; }

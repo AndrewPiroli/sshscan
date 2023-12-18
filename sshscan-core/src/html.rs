@@ -110,7 +110,7 @@ fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Hos
         }
         c.add_container(Container::new(ContainerType::Div)
         .with_attributes([("class", "sshscan-alist-inner")])
-        .with_header_attr(3, algo.0, [("id", format!("algo-{}", algo.0).as_str())])
+        .with_header_attr(3, format!("{} <span class=\"header-count\">Count: {}</span>", algo.0, algo.1.len()), [("id", format!("algo-{}", algo.0).as_str())])
         .with_container(inner));
     }
     c
