@@ -6,9 +6,9 @@ license.workspace = true
 edition.workspace = true
 
 [dependencies]
-xmltree = { version = "=0.10.3", default-features = false }
-thiserror = { version = "~1.0.50", default-features = false }
-build_html = { version = "~2.4.0", default-features = false }
+xmltree = { version = "~0.11.0", default-features = false }
+thiserror = { version = "~2.0.9", default-features = false }
+build_html = { version = "~2.5.0", default-features = false }
 chrono = { version = "~0.4.31", default-features = false, features = ["std", "clock", "unstable-locales"]}
 arbitrary = { version = "1", optional = true, features = ["derive"] }
 paste = { version = "~1.0.14", default-features = false }
