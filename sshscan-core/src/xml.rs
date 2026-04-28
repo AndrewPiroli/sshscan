@@ -62,17 +62,12 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
     let mut algos = Default::default();
     let mut product: Option<String> = None;
     if let Some(port_elem) = port_elem.as_element() {
-        port = port_elem
-            .attributes
-            .get("portid")
-            .unwrap_or(&"0".to_owned())
-            .parse()
-            .unwrap_or_default();
+        port = port_elem.attributes.get("portid").map_or(0, |pid_s| pid_s.parse().unwrap_or(0));
         for child in port_elem.children.iter() {
             if let Some(child) = child.as_element() {
                 match child.name.as_str() {
                     "state" => {
-                        state = child.attributes.get("state").unwrap_or(&"".to_owned()) == "open";
+                        state = child.attributes.get("state").is_some_and(|maybe_open|maybe_open.eq_ignore_ascii_case("open"));
                     }
                     "script" => {
                         process_script(child, &mut algos)?;

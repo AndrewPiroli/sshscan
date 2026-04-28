@@ -45,21 +45,15 @@ enum Commands {
 
 pub fn main() -> ExitCode {
     let args = Args::parse();
-    let output_file = match &args.output_file {
-        Some(f) => {
-            if f.as_os_str() == "-" {
-                OutputType::Stdout
-            }
-            else {
-                OutputType::File(f.clone())
-            }
-        },
-        None => OutputType::Stdout,
-    };
-    let include_down = match &args.include_down {
-        Some(b) => *b,
-        None => false,
-    };
+    let output_file = args.output_file.map_or(OutputType::Stdout, |maybe_path|{
+        if maybe_path.as_os_str() == "-" {
+            OutputType::Stdout
+        }
+        else {
+            OutputType::File(maybe_path)
+        }
+    });
+    let include_down = args.include_down.unwrap_or(false);
     let config = SshScanConfig { output_file, include_down };
     match &args.command {
         Commands::Generate { input_file } => {

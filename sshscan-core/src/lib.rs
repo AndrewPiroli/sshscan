@@ -38,9 +38,9 @@ pub enum HostStatus {
 impl From<&str> for HostStatus {
     fn from(value: &str) -> Self {
         match (value.eq_ignore_ascii_case("up"), value.eq_ignore_ascii_case("down")) {
-            (true, _) => HostStatus::Up,
-            (_, true) => HostStatus::Down,
-            (false, false) => HostStatus::Unknown,
+            (true, _) => Self::Up,
+            (_, true) => Self::Down,
+            (false, false) => Self::Unknown,
         }
     }
 }
@@ -65,7 +65,7 @@ pub struct Algos {
 }
 
 impl Algos {
-    fn longest(&self) -> usize {
+    const fn longest(&self) -> usize {
         let mut len = 0usize;
         if len < self.kex_algos.len() { len = self.kex_algos.len(); }
         if len < self.host_key_algos.len() { len = self.host_key_algos.len(); }
