@@ -87,7 +87,7 @@ pub fn main() -> ExitCode {
 
 }
 
-fn scan_and_gen(cidr: impl AsRef<str>, port: u16, agressive: bool, config: SshScanConfig) -> Result<(), sshscan_core::SshScanErr> {
+fn scan_and_gen(cidr: &str, port: u16, agressive: bool, config: SshScanConfig) -> Result<(), sshscan_core::SshScanErr> {
     use std::process::*;
     let nmap_exe = match which::which("nmap") {
         Ok(exe) => exe,
@@ -102,10 +102,10 @@ fn scan_and_gen(cidr: impl AsRef<str>, port: u16, agressive: bool, config: SshSc
         nmap_handle.arg("-T1");
     }
     nmap_handle.arg("-sV");
-    nmap_handle.arg(format!("-p{port}"));
+    nmap_handle.arg(&format!("-p{port}"));
     nmap_handle.arg("--script");
     nmap_handle.arg("ssh2-enum-algos");
-    nmap_handle.arg(cidr.as_ref());
+    nmap_handle.arg(cidr);
     nmap_handle.arg("-oX");
     nmap_handle.arg("-");
     nmap_handle.stdin(Stdio::null()).stdout(Stdio::piped());
