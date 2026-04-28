@@ -1,6 +1,5 @@
 use crate::Host;
 use std::collections::HashMap;
-use paste::paste;
 
 #[derive(Debug, Default, Clone)]
 pub struct AggregatedData<'host> {
@@ -12,8 +11,8 @@ pub struct AggregatedData<'host> {
 }
 
 macro_rules! build {
-    ($host:expr; $hp:expr; $res:expr; {$($nam:expr) +}) => {
-        paste! { $(
+    ($host:expr; $hp:expr; $res:expr; {$($nam:ident) +}) => {
+        $(
             for $nam in $hp.algos.$nam.iter() {
                 if let Some(existing) = $res.$nam.get_mut($nam) {
                     existing.push($host);
@@ -23,7 +22,7 @@ macro_rules! build {
                 }
             }
         )*
-    }; };
+    };
     ($host:expr; $hp:expr; $res:expr) => {build!($host; $hp; $res; {kex host_key encryption mac compression})};
 }
 
