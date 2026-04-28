@@ -23,7 +23,7 @@ fn process_host(host_elem: &Element, filter_down: bool) -> Result<Host, SshScanE
             match child.name.as_str() {
                 "status" => {
                     if let Some(addr) = child.attributes.get("state") {
-                        host_status = addr.parse().expect("this impl doesn't fail");
+                        host_status = HostStatus::from(addr.as_str());
                     }
                 }
                 "address" => {

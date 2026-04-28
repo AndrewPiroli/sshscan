@@ -3,7 +3,6 @@ pub mod agg_data;
 pub mod html;
 
 use std::num::ParseIntError;
-use std::str::FromStr;
 use thiserror::Error;
 
 
@@ -36,15 +35,13 @@ pub enum HostStatus {
     Unknown,
 }
 
-impl FromStr for HostStatus {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(match s.to_ascii_lowercase().as_str() {
-            "up" => Self::Up,
-            "down" => Self::Down,
-            _ => Self::Unknown,
-        })
+impl From<&str> for HostStatus {
+    fn from(value: &str) -> Self {
+        match (value.eq_ignore_ascii_case("up"), value.eq_ignore_ascii_case("down")) {
+            (true, _) => HostStatus::Up,
+            (_, true) => HostStatus::Down,
+            (false, false) => HostStatus::Unknown,
+        }
     }
 }
 
