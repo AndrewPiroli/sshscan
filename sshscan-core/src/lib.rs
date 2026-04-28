@@ -25,18 +25,18 @@ impl From<xmltree::ParseError> for SshScanErr {
 impl core::fmt::Display for SshScanErr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            SshScanErr::XMLInvalid => {
+            Self::XMLInvalid => {
                 f.write_str("XML Data Invalid")
             },
-            SshScanErr::ParseIntError(parse_int_error) => {
+            Self::ParseIntError(parse_int_error) => {
                 f.write_str("Couldn't parse integer from byte stream.\n - Inner:")?;
                 parse_int_error.fmt(f)
             },
-            SshScanErr::XMLParseFailure(parse_error) => {
+            Self::XMLParseFailure(parse_error) => {
                 f.write_str("XML Parsing Failure\n - Inner:")?;
                 parse_error.fmt(f)
             },
-            SshScanErr::Other(xplain) => {
+            Self::Other(xplain) => {
                 f.write_str("Unspecified error: ")?;
                 xplain.fmt(f)
             },
