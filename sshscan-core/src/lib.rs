@@ -57,21 +57,21 @@ pub struct Description {
 #[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Default, Clone)]
 pub struct Algos {
-    kex_algos: Vec<String>,
-    host_key_algos: Vec<String>,
-    encryption_algos: Vec<String>,
-    mac_algos: Vec<String>,
-    compression_algos: Vec<String>,
+    kex: Vec<String>,
+    host_key: Vec<String>,
+    encryption: Vec<String>,
+    mac: Vec<String>,
+    compression: Vec<String>,
 }
 
 impl Algos {
     const fn longest(&self) -> usize {
         let mut len = 0usize;
-        if len < self.kex_algos.len() { len = self.kex_algos.len(); }
-        if len < self.host_key_algos.len() { len = self.host_key_algos.len(); }
-        if len < self.encryption_algos.len() { len = self.encryption_algos.len(); }
-        if len < self.mac_algos.len() { len = self.mac_algos.len(); }
-        if len < self.compression_algos.len() { len = self.compression_algos.len(); }
+        if len < self.kex.len() { len = self.kex.len(); }
+        if len < self.host_key.len() { len = self.host_key.len(); }
+        if len < self.encryption.len() { len = self.encryption.len(); }
+        if len < self.mac.len() { len = self.mac.len(); }
+        if len < self.compression.len() { len = self.compression.len(); }
         len
     }
 }
@@ -81,11 +81,11 @@ impl std::ops::Index<&str> for Algos {
 
     fn index(&self, index: &str) -> &Self::Output {
         match index {
-            "kex_algorithms" => &self.kex_algos,
-            "server_host_key_algorithms" => &self.host_key_algos,
-            "encryption_algorithms" => &self.encryption_algos,
-            "mac_algorithms" => &self.mac_algos,
-            "compression_algorithms" => &self.compression_algos,
+            "kex_algorithms" => &self.kex,
+            "server_host_key_algorithms" => &self.host_key,
+            "encryption_algorithms" => &self.encryption,
+            "mac_algorithms" => &self.mac,
+            "compression_algorithms" => &self.compression,
             _ => panic!("Invalid index"),
         }
     }
@@ -94,11 +94,11 @@ impl std::ops::Index<&str> for Algos {
 impl std::ops::IndexMut<&str> for Algos {
     fn index_mut(&mut self, index: &str) -> &mut Self::Output {
         match index {
-            "kex_algorithms" => &mut self.kex_algos,
-            "server_host_key_algorithms" => &mut self.host_key_algos,
-            "encryption_algorithms" => &mut self.encryption_algos,
-            "mac_algorithms" => &mut self.mac_algos,
-            "compression_algorithms" => &mut self.compression_algos,
+            "kex_algorithms" => &mut self.kex,
+            "server_host_key_algorithms" => &mut self.host_key,
+            "encryption_algorithms" => &mut self.encryption,
+            "mac_algorithms" => &mut self.mac,
+            "compression_algorithms" => &mut self.compression,
             _ => panic!("Invalid index"),
         }
     }

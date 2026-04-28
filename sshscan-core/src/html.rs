@@ -50,7 +50,7 @@ fn build_host_table(rows: &[Vec<String>]) -> Table {
     let header_row = {
         let mut header_row = TableRow::new();
         for header in HOST_HEADERS {
-            header_row.add_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", header.html_id), header.title))
+            header_row.add_cell(TableCell::new(TableCellType::Header).with_link(format!("#{}", header.html_id), header.title));
         }
         header_row
     };
@@ -58,11 +58,10 @@ fn build_host_table(rows: &[Vec<String>]) -> Table {
     for row in rows {
         let mut r = TableRow::new();
         for entry in row {
-            if !entry.is_empty() {
-                r.add_cell(TableCell::new(TableCellType::Data).with_link(format!("#algo-{entry}"), entry));
-            }
-            else {
+            if entry.is_empty() {
                 r.add_cell(TableCell::new(TableCellType::Data));
+            } else {
+                r.add_cell(TableCell::new(TableCellType::Data).with_link(format!("#algo-{entry}"), entry));
             }
         }
         tab.add_custom_body_row(r);
@@ -102,8 +101,8 @@ fn create_algo_list(title: &str, title_id: &str, list: &HashMap<String, Vec<&Hos
     .with_header_attr(2, title, [("id", title_id)]);
     for algo in list {
         let mut inner = Container::new(ContainerType::UnorderedList);
-        for host in algo.1.iter() {
-            for host_port in host.port_states.iter() {
+        for host in algo.1 {
+            for host_port in &host.port_states {
                 let id = format!("{}:{}", host.addr, host_port.portid);
                 inner.add_link(format!("#{id}"), id.as_str());
             }

@@ -1,4 +1,3 @@
-use sshscan_core::xml;
 use std::{path::PathBuf, io::Write, process::ExitCode};
 use clap::{Parser, Subcommand};
 
@@ -61,18 +60,18 @@ pub fn main() -> ExitCode {
                 Ok(s) => s,
                 Err(err) => {
                     eprintln!("Failed to read input file at: {}", input_file.to_string_lossy());
-                    eprintln!("Reason: {}", err);
+                    eprintln!("Reason: {err}");
                     return ExitCode::FAILURE;
                 },
             };
             let cur = std::io::Cursor::new(data);
-            generate(cur, config);
+            generate(cur, &config);
             ExitCode::SUCCESS
         },
         Commands::Scan { cidr, port, aggressive } => {
 
-            if let Err(e) = scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), config) {
-                eprintln!("Error: {}", e);
+            if let Err(e) = scan_and_gen(cidr, port.unwrap_or(22), aggressive.unwrap_or(true), &config) {
+                eprintln!("Error: {e}");
                 return ExitCode::FAILURE;
             }
             ExitCode::SUCCESS
@@ -81,13 +80,10 @@ pub fn main() -> ExitCode {
 
 }
 
-fn scan_and_gen(cidr: &str, port: u16, agressive: bool, config: SshScanConfig) -> Result<(), sshscan_core::SshScanErr> {
-    use std::process::*;
-    let nmap_exe = match which::which("nmap") {
-        Ok(exe) => exe,
-        Err(_) => {
-            return Err(sshscan_core::SshScanErr::Other("nmap not found in $PATH".to_owned()));
-        },
+fn scan_and_gen(cidr: &str, port: u16, agressive: bool, config: &SshScanConfig) -> Result<(), sshscan_core::SshScanErr> {
+    use std::process::{Command, Stdio};
+    let Ok(nmap_exe) = which::which("nmap") else {
+        return Err(sshscan_core::SshScanErr::Other("nmap not found in $PATH".to_owned()));
     };
     let mut nmap_handle = Command::new(nmap_exe);
     if agressive {
@@ -112,8 +108,8 @@ fn scan_and_gen(cidr: &str, port: u16, agressive: bool, config: SshScanConfig) -
 }
 
 
-fn generate(input: impl std::io::Read, config: SshScanConfig) {
-    let res = xml::process_xml(input, !config.include_down).expect("Failed to process XML!");
+fn generate(input: impl std::io::Read, config: &SshScanConfig) {
+    let res = sshscan_core::xml::process_xml(input, !config.include_down).expect("Failed to process XML!");
     let mut proccessed_hosts = Vec::with_capacity(res.len());
     for found in res {
         match found {
