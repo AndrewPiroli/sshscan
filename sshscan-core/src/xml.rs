@@ -92,7 +92,7 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
                             temp += " ";
                         }
                         if !temp.is_empty() {
-                            temp.truncate(temp.rfind(' ').unwrap());
+                            temp.truncate(temp.rfind(' ').unwrap_or(usize::MAX));
                             product = Some(temp);
                         }
                     }
