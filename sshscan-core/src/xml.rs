@@ -113,14 +113,10 @@ fn process_host_port(port_elem: &XMLNode) -> Result<Description, SshScanErr> {
 }
 
 fn process_script(script_elem: &Element, algos: &mut Algos) -> Result<(), SshScanErr> {
-    // #![feature(let_chains)] pls
-    if let Some(id) = script_elem.attributes.get("id") {
-        if id != "ssh2-enum-algos" {
-            return Ok(());
-        }
-    }
-    else {
-        return Ok(());
+    match script_elem.attributes.get("id") {
+        None => { return Ok(()) }
+        Some(id) if id != "ssh2-enum-algos" => { return Ok(()) },
+        _ => {}
     }
     for table_elem in script_elem.children.iter() {
         let table_elem = table_elem.as_element().ok_or(SshScanErr::XMLInvalid)?;
