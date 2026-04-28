@@ -7,10 +7,8 @@ where R: std::io::Read {
     let mut res = Vec::new();
     let root = Element::parse(xml)?;
     for e in root.children.iter() {
-        if let Some(elem) = e.as_element() {
-            if elem.name == "host" {
-                res.push(process_host(elem, filter_down));
-            }
+        if let Some(elem) = e.as_element() && elem.name == "host" {
+            res.push(process_host(elem, filter_down));
         }
     }
     Ok(res)
@@ -29,12 +27,11 @@ fn process_host(host_elem: &Element, filter_down: bool) -> Result<Host, SshScanE
                     }
                 }
                 "address" => {
-                    if let Some(ty) = child.attributes.get("addrtype") {
-                        if ty == "ipv4" || ty == "ipv6" {
-                            if let Some(addr) = child.attributes.get("addr") {
-                                host_addr.clone_from(addr);
-                            }
-                        }
+                    if let Some(ty) = child.attributes.get("addrtype") &&
+                       (ty == "ipv4" || ty == "ipv6") &&
+                       let Some(addr) = child.attributes.get("addr")
+                    {
+                        host_addr.clone_from(addr);
                     }
                 }
                 "ports" => {
@@ -130,7 +127,7 @@ fn process_script(script_elem: &Element, algos: &mut Algos) -> Result<(), SshSca
                 .as_element()
                 .ok_or(SshScanErr::XMLInvalid)?
                 .children
-                .get(0)
+                .first()
                 .ok_or(SshScanErr::XMLInvalid)?
                 .as_text()
                 .ok_or(SshScanErr::XMLInvalid)?;

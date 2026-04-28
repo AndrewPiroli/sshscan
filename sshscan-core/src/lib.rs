@@ -28,10 +28,11 @@ pub struct Host {
 }
 
 #[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub enum HostStatus {
     Up,
     Down,
+    #[default]
     Unknown,
 }
 
@@ -44,12 +45,6 @@ impl FromStr for HostStatus {
             "down" => Self::Down,
             _ => Self::Unknown,
         })
-    }
-}
-
-impl Default for HostStatus {
-    fn default() -> Self {
-        Self::Unknown
     }
 }
 

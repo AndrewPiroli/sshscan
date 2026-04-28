@@ -102,6 +102,7 @@ fn scan_and_gen(cidr: &str, port: u16, agressive: bool, config: SshScanConfig) -
         nmap_handle.arg("-T1");
     }
     nmap_handle.arg("-sV");
+    #[allow(clippy::needless_borrows_for_generic_args)] // reduce binary size by sticking with just &str to Command::arg
     nmap_handle.arg(&format!("-p{port}"));
     nmap_handle.arg("--script");
     nmap_handle.arg("ssh2-enum-algos");
