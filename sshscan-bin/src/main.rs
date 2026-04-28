@@ -67,13 +67,13 @@ pub fn main() -> ExitCode {
                 Ok(s) => s,
                 Err(err) => {
                     eprintln!("Failed to read input file at: {}", input_file.to_string_lossy());
-                    eprintln!("Reason: {}", err.to_string());
+                    eprintln!("Reason: {}", err);
                     return ExitCode::FAILURE;
                 },
             };
             let cur = std::io::Cursor::new(data);
             generate(cur, config);
-            return ExitCode::SUCCESS;
+            ExitCode::SUCCESS
         },
         Commands::Scan { cidr, port, aggressive } => {
 
@@ -81,7 +81,7 @@ pub fn main() -> ExitCode {
                 eprintln!("Error: {}", e);
                 return ExitCode::FAILURE;
             }
-            return ExitCode::SUCCESS;
+            ExitCode::SUCCESS
         },
     }
 
