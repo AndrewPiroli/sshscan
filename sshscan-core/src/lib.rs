@@ -3,20 +3,47 @@ pub mod agg_data;
 pub mod html;
 
 use std::num::ParseIntError;
-use thiserror::Error;
 
-
-#[derive(Error, Debug)]
+#[derive(Debug)]
 pub enum SshScanErr {
-    #[error("XML Input malformed")]
     XMLInvalid,
-    #[error("Parsing integer failed")]
-    ParseIntError(#[from] ParseIntError),
-    #[error("Failed to parse XML")]
-    XMLParseFailure(#[from] xmltree::ParseError),
-    #[error("Error: {0}")]
+    ParseIntError(ParseIntError),
+    XMLParseFailure(xmltree::ParseError),
     Other(String),
 }
+
+impl From<ParseIntError> for SshScanErr {
+    fn from(value: ParseIntError) -> Self {
+        Self::ParseIntError(value)
+    }
+}
+impl From<xmltree::ParseError> for SshScanErr {
+    fn from(value: xmltree::ParseError) -> Self {
+        Self::XMLParseFailure(value)
+    }
+}
+impl core::fmt::Display for SshScanErr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SshScanErr::XMLInvalid => {
+                f.write_str("XML Data Invalid")
+            },
+            SshScanErr::ParseIntError(parse_int_error) => {
+                f.write_str("Couldn't parse integer from byte stream.\n - Inner:")?;
+                parse_int_error.fmt(f)
+            },
+            SshScanErr::XMLParseFailure(parse_error) => {
+                f.write_str("XML Parsing Failure\n - Inner:")?;
+                parse_error.fmt(f)
+            },
+            SshScanErr::Other(xplain) => {
+                f.write_str("Unspecified error: ")?;
+                xplain.fmt(f)
+            },
+        }
+    }
+}
+impl core::error::Error for SshScanErr {}
 
 #[cfg_attr(feature = "fuzz", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Default, Clone)]
